@@ -1,0 +1,46 @@
+\begin{table}[!ht]
+\small
+\centering
+\caption{Comparison between our XXLTraffic dataset and the existing traffic datasets.}
+\renewcommand\arraystretch{1.0}
+\setlength{\tabcolsep}{0.99mm}{ \begin{tabular}{c|l|l|l|l|l|l}
+\toprule 
+\hline
+\textbf{Reference} & \textbf{Dataset} &  \textbf{Samples} & \textbf{Nodes} & \textbf{Time Interval} & \textbf{Time Span} & \textbf{Time Period}  \\ \hline
+\multirow{2}{*}{DCRNN} & \textbf{METR-LA} & 34,272 & 207 & 5 mins & 4 months & 03/2012 - 06/2012  \\ \cline{2-7}
+& \textbf{PEMS-BAY} & 52,116 & 325 & 5 mins & 6 months  & 01/2017 - 05/2017  \\ \hline
+
+\multirow{1}{*}{LSTNet} & \textbf{Traffic} & 17,544 & 862 & 1 hour & 2 years & 01/2015 - 12/2016  \\ \hline
+
+\multirow{2}{*}{STGCN} & \textbf{PEMSD7(M)} & 12,672 & 228 & 5 mins & 2 months & 05/2012 - 06/2012  \\ \cline{2-7}
+& \textbf{PEMSD7(L)} & 12,672 & 1026 & 5 mins & 2 months & 05/2012 - 06/2012  \\ \hline
+
+\multirow{2}{*}{ASTGCN} & \textbf{PEMSD4-I} & 17,002 & 228 & 5 mins & 2 months & 01/2018 - 02/2018  \\ \cline{2-7}
+& \textbf{PEMSD8-I} & 17,856 & 1,979 & 5 mins & 2 months & 07/2016 - 08/2016  \\ \hline
+
+\multirow{4}{*}{STSGCN} & \textbf{PEMS03} & 26,208 & 358 & 5 mins & 11 months & 01/2018 - 11/2018 \\ \cline{2-7}
+& \textbf{PEMS04} & 16,992 & 307 & 5 mins & 2 months & 01/2018 - 02/2018  \\ \cline{2-7}
+& \textbf{PEMS07} & 28,224 & 883 & 5 mins & 2 months & 05/2017 - 06/2017  \\ \cline{2-7}
+& \textbf{PEMS08} & 17,856 & 170 & 5 mins & 2 months & 07/2016 - 08/2016  \\ \hline
+\multirow{4}{*}{Large-ST} & \textbf{CA} & 525,888 & 8,600 & 5 mins & 5 years & 01/2017 - 12/2021 \\ \cline{2-7}
+& \textbf{GLA} & 525,888 & 3,834 & 5 mins & 5 years & 01/2017 - 12/2021  \\ \cline{2-7}
+& \textbf{GBA} & 525,888 & 2,352 & 5 mins & 5 years & 01/2017 - 12/2021  \\ \cline{2-7}
+& \textbf{SD} & 525,888 & 716 & 5 mins & 5 years & 01/2017 - 12/2021  \\ \hline
+
+\toprule 
+\multirow{10}{*}{Ours} & \textbf{PEMS03\_{gap\&agg}} & 2,629,513 & 151 & Gap/Hr/Day & 23.00 years & 03/2001 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS04\_{gap\&agg}} & 2,486,472 & 822 & Gap/Hr/Day & 21.75 years & 06/2002 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS05\_{gap\&agg}} & 1,371,879 & 103 & Gap/Hr/Day & 12.00 years & 03/2012 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS06\_{gap\&agg}} & 1,628,852 & 130 & Gap/Hr/Day & 14.25 years & 12/2009 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS07\_{gap\&agg}} & 2,486,472 & 3,062 & Gap/Hr/Day & 21.75 years & 06/2002 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS08\_{gap\&agg}} & 2,629,513 & 212 & Gap/Hr/Day & 23.00 years & 03/2001 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS10\_{gap\&agg}} & 1,914,982 & 107 & Gap/Hr/Day & 16.75 years & 06/2007 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS11\_{gap\&agg}} & 2,457,676 & 521 & Gap/Hr/Day & 21.50 years & 09/2002 - 03/2024  \\ \cline{2-7}
+& \textbf{PEMS12\_{gap\&agg}} & 2,533,735 & 1,543 & Gap/Hr/Day & 22.16 years & 01/2002 - 03/2024  \\ \cline{2-7}
+& \textbf{tfNSW} & 1,304,897 & 27 & Gap/Hr/Day & 11.42 years & 01/2013 - 05/2024  \\
+\hline
+\bottomrule
+\end{tabular}}
+
+\label{tab:data1}
+\end{table}
