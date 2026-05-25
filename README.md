@@ -20,7 +20,7 @@ We benchmark continual spatio-temporal forecasting on **EvoXXLTraffic** — a lo
 
 LaTeX source: [`table/data1.tex`](table/data1.tex).
 
-### XXLTraffic subset from SIGSPATIAL 2025 Best Paper:
+### XXLTraffic subset from [SIGSPATIAL 2025 Best Paper](https://dl.acm.org/doi/10.1145/3748636.3762762):
 
 Comparison with existing traffic datasets:
 
