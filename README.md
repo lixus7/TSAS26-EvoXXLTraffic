@@ -16,9 +16,13 @@ We benchmark continual spatio-temporal forecasting on **EvoXXLTraffic** — a lo
 
 > 📄 PDF version: [`fig/new1.pdf`](fig/new1.pdf) · prototype diagram: [`fig/proto.pdf`](fig/proto.pdf)
 
-### Comparison with existing traffic datasets
+---
 
 LaTeX source: [`table/data1.tex`](table/data1.tex).
+
+### XXLTraffic subset from SIGSPATIAL 2025 Best Paper:
+
+Comparison with existing traffic datasets:
 
 | Reference | Dataset | Samples | Nodes | Interval | Span | Period |
 |---|---|---:|---:|---|---|---|
@@ -40,7 +44,11 @@ LaTeX source: [`table/data1.tex`](table/data1.tex).
 | **Ours** | **PEMS11**<sub>gap&agg</sub> | 2,457,676 | 521 | Gap/Hr/Day | **21.50 yr** | 09/2002–03/2024 |
 | **Ours** | **PEMS12**<sub>gap&agg</sub> | 2,533,735 | 1,543 | Gap/Hr/Day | **22.16 yr** | 01/2002–03/2024 |
 
-### Per-district sensor growth
+---
+
+### EvoXXLTraffic subset from TSAS26-EvoXXLTraffic
+
+Per-district sensor growth:
 
 | District | Years | $N_\text{first}$ | $N_\text{last}$ | Growth |
 |---|---|---:|---:|---:|
@@ -55,6 +63,61 @@ LaTeX source: [`table/data1.tex`](table/data1.tex).
 | PEMS12 | 2002–2025 (24) | $\sim 100$ | 2,587 | $\sim +2,487\%$ |
 
 This regime (high growth $\times$ long horizon) is what existing evolving-graph methods are *not* designed for — backbones trained on the tiny first-year graph become severely under-capacity, and rank-limited prompts/embeddings cannot absorb the heterogeneity of thousands of newly installed sensors. EvoXXLTraffic is constructed precisely to expose this failure mode.
+
+---
+
+## 🛠️ Dataset Processing
+
+All preprocessing notebooks live in [`xxltrafficdata/`](xxltrafficdata). Each district is processed by a two-stage pipeline:
+
+```
+raw PEMS dumps  ──[stage 1]──>  yearly per-district tensors  ──[stage 2]──>  EAC-format (flow + adj per year)
+                pemsXX_yearly_nodes.ipynb                    pemsXX_build_eac_data.ipynb
+```
+
+* **Stage 1 — `pemsXX_yearly_nodes.ipynb`** ([example: PEMS03](xxltrafficdata/pems03_yearly_nodes.ipynb)) reads the raw 5-minute PEMS feed, harmonises the station set year-by-year, and emits yearly node lists / sensor metadata.
+* **Stage 2 — `pemsXX_build_eac_data.ipynb`** ([example: PEMS03](xxltrafficdata/pems03_build_eac_data.ipynb)) takes the yearly node lists and produces the `<year>.npz` (flow tensor) and `<year>_adj.npz` (adjacency) files expected by [`eac/main.py`](eac/main.py).
+
+| District | Stage 1 (yearly nodes) | Stage 2 (EAC-format flow + adj) |
+|---|---|---|
+| PEMS03 | [`pems03_yearly_nodes.ipynb`](xxltrafficdata/pems03_yearly_nodes.ipynb) | [`pems03_build_eac_data.ipynb`](xxltrafficdata/pems03_build_eac_data.ipynb) |
+| PEMS04 | [`pems04_yearly_nodes.ipynb`](xxltrafficdata/pems04_yearly_nodes.ipynb) | [`pems04_build_eac_data.ipynb`](xxltrafficdata/pems04_build_eac_data.ipynb) |
+| PEMS05 | [`pems05_yearly_nodes.ipynb`](xxltrafficdata/pems05_yearly_nodes.ipynb) | [`pems05_build_eac_data.ipynb`](xxltrafficdata/pems05_build_eac_data.ipynb) |
+| PEMS06 | [`pems06_yearly_nodes.ipynb`](xxltrafficdata/pems06_yearly_nodes.ipynb) | [`pems06_build_eac_data.ipynb`](xxltrafficdata/pems06_build_eac_data.ipynb) |
+| PEMS07 | [`pems07_yearly_nodes.ipynb`](xxltrafficdata/pems07_yearly_nodes.ipynb) | [`pems07_build_eac_data.ipynb`](xxltrafficdata/pems07_build_eac_data.ipynb) |
+| PEMS08 | [`pems08_yearly_nodes.ipynb`](xxltrafficdata/pems08_yearly_nodes.ipynb) | [`pems08_build_eac_data.ipynb`](xxltrafficdata/pems08_build_eac_data.ipynb) |
+| PEMS10 | [`pems10_yearly_nodes.ipynb`](xxltrafficdata/pems10_yearly_nodes.ipynb) | [`pems10_build_eac_data.ipynb`](xxltrafficdata/pems10_build_eac_data.ipynb) |
+| PEMS11 | [`pems11_yearly_nodes.ipynb`](xxltrafficdata/pems11_yearly_nodes.ipynb) | [`pems11_build_eac_data.ipynb`](xxltrafficdata/pems11_build_eac_data.ipynb) |
+| PEMS12 | [`pems12_yearly_nodes.ipynb`](xxltrafficdata/pems12_yearly_nodes.ipynb) | [`pems12_build_eac_data.ipynb`](xxltrafficdata/pems12_build_eac_data.ipynb) |
+
+### Auxiliary notebooks / scripts
+
+* [`pems03_build_adj.ipynb`](xxltrafficdata/pems03_build_adj.ipynb) — reference notebook for constructing the per-year adjacency matrix (used as a template for the other districts).
+* [`pems03_data_quality_check.py`](xxltrafficdata/pems03_data_quality_check.py) — sanity checks for missing / duplicate stations and per-year coverage.
+* [`pems_all_growth_viz.ipynb`](xxltrafficdata/pems_all_growth_viz.ipynb) — produces the cross-district growth visualisation ([`pems_all_growth_viz.pdf`](xxltrafficdata/pems_all_growth_viz.pdf), [`pems_all_growth_viz.png`](xxltrafficdata/pems_all_growth_viz.png)).
+* [`pems11_adj_evolution.png`](xxltrafficdata/pems11_adj_evolution.png) — example visualisation of adjacency evolution across years for PEMS11.
+
+<p align="center">
+    <img src="xxltrafficdata/pems_all_growth_viz.png" alt="Cross-district sensor growth visualisation" align="center" width="900px" />
+</p>
+
+### Downloading the processed data
+
+Raw PEMS dumps and the intermediate / EAC-format outputs are **not** committed to this repository. The per-district directories `pems03/ ... pems12/` and `preprocessed/` are empty placeholders.
+
+> ☁️ **Cloud-disk download link (TODO: insert after upload):** `<paste-link-here>`
+
+After downloading, place the files so the layout matches:
+
+```
+xxltrafficdata/
+├── pems03/<year>.npz           ← yearly flow tensors
+├── pems03/<year>_adj.npz       ← yearly adjacency matrices
+├── pems04/...
+└── preprocessed/               ← intermediate stage-1 outputs
+```
+
+Then either rerun the stage-2 notebooks to regenerate the EAC inputs, or symlink / copy the processed `<year>.npz` files into [`eac/data/`](eac/) following [`eac/README.md`](eac/README.md).
 
 ---
 
@@ -130,6 +193,11 @@ tsas/
 ├── tables/                            ← main result tables (LaTeX)
 │   ├── tsas_main_table_part1.tex      ← PEMS03–PEMS07
 │   └── tsas_main_table_part2.tex      ← PEMS08, PEMS10–PEMS12
+├── xxltrafficdata/                    ← data processing pipeline
+│   ├── pemsXX_yearly_nodes.ipynb      ← stage 1: raw → yearly nodes
+│   ├── pemsXX_build_eac_data.ipynb    ← stage 2: yearly → EAC format
+│   ├── pems_all_growth_viz.ipynb      ← cross-district growth viz
+│   └── pemsXX/  preprocessed/         ← empty placeholders (cloud download)
 └── eac/                               ← shared codebase (all baselines)
     ├── main.py                        ← entry point
     ├── conf/PEMS{03,04,05,...,12}/    ← per-method JSON configs
@@ -138,4 +206,5 @@ tsas/
     └── scripts/                       ← launch scripts
 ```
 
-> Heavy artefacts (`eac/data/`, `eac/log/`, `eac/run_logs/`) are not committed — download the processed datasets from the cloud link in [`eac/README.md`](eac/README.md) before running.
+> Heavy artefacts (raw / processed flow data, training logs) are not committed.
+> Download them from the cloud-disk link in the [Dataset Processing](#-dataset-processing) section.

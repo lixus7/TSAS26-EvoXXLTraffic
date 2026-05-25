@@ -6,5 +6,9 @@ eac/data/
 eac/log/
 eac/run_logs/
 eac/nohup.out
+xxltrafficdata/pems*/
+!xxltrafficdata/pems*/.gitkeep
+xxltrafficdata/preprocessed/*
+!xxltrafficdata/preprocessed/.gitkeep
 *.npz
 *.npy
